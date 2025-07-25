@@ -5,16 +5,15 @@
       "src": "hammer_project/wsgi.py",
       "use": "@vercel/python",
       "config": {
-        "maxLambdaSize": "15mb",
         "runtime": "python3.11",
+        "maxLambdaSize": "15mb",
         "includeFiles": [
           "hammer_project/**",
           "manage.py",
-          "requirements.txt",
           "static/**",
-          "media/**"
+          "requirements.txt"
         ],
-        "installCommand": "pip install psycopg2-binary==2.9.10 && pip install -r requirements.txt"
+        "installCommand": "pip install --upgrade pip && pip install -r requirements.txt"
       }
     }
   ],
@@ -27,18 +26,9 @@
       }
     },
     {
-      "src": "/media/(.*)",
-      "dest": "/media/$1"
-    },
-    {
-      "src": "/admin(.*)",
-      "dest": "hammer_project/wsgi.py",
-      "methods": ["GET", "POST"]
-    },
-    {
       "src": "/(.*)",
       "dest": "hammer_project/wsgi.py",
-      "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
+      "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
     }
   ]
 }
