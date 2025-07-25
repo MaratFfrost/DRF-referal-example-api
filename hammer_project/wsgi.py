@@ -13,4 +13,6 @@ from serverless_wsgi import handle_request
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "hammer_project.settings")
 application = get_wsgi_application()
-handler = handle_request(application)  
+
+def handler(event, context):
+    return handle_request(application, event, context)
