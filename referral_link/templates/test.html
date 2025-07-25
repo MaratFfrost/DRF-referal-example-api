@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Django Session Auth Test Front</title>
+  <style>
+    body { font-family: sans-serif; max-width: 400px; margin: 40px auto; background: #f9f9f9; }
+    input, button { margin: 5px 0; padding: 8px; width: 100%; box-sizing: border-box; }
+    .box { background: #fff; padding: 20px; margin-bottom: 16px; border-radius: 8px; box-shadow: 0 2px 6px #ddd; }
+    .result { background: #f3f3f3; padding: 8px; border-radius: 6px; font-size: 14px; }
+    button { cursor: pointer; background: #007bff; color: #fff; border: none; border-radius: 6px; }
+    button:hover { background: #0056b3; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h3>1. Получить код</h3>
+    <input id="phone_number" type="text" placeholder="+7XXXXXXXXXX или 8XXXXXXXXXX">
+    <button onclick="getCode()">Запросить код</button>
+    <div id="result_get_code" class="result"></div>
+  </div>
+
+  <div class="box">
+    <h3>2. Войти</h3>
+    <input id="login_phone" type="text" placeholder="+7XXXXXXXXXX или 8XXXXXXXXXX">
+    <input id="login_code" type="text" placeholder="Код из SMS">
+    <button onclick="login()">Войти</button>
+    <div id="result_login" class="result"></div>
+  </div>
+
+  <div class="box">
+    <h3>3. Профиль (+ приглашённые)</h3>
+    <button onclick="getProfile()">Получить профиль</button>
+    <div id="result_profile" class="result"></div>
+  </div>
+
+  <div class="box">
+    <h3>4. Ввести инвайт-код</h3>
+    <input id="invite_code" type="text" placeholder="Инвайт-код">
+    <button onclick="enterInviteCode()">Ввести код</button>
+    <div id="result_enter_code" class="result"></div>
+  </div>
+
+  <div class="box">
+    <h3>5. Выйти</h3>
+    <button onclick="logout()">Выйти</button>
+    <div id="result_logout" class="result"></div>
+  </div>
+
+  <script>
+    const BASE_URL = 'http://localhost:7777';
+
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    window.onload = ensureCsrfCookie;
+
+    async function getCode() {
+      const phone_number = document.getElementById('phone_number').value.trim();
+      const resDiv = document.getElementById('result_get_code');
+      resDiv.textContent = 'Запрос...';
+
+      const csrftoken = getCookie('csrftoken');
+
+      const resp = await fetch(BASE_URL + '/api/v1/auth/send_code/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({phone_number}),
+        credentials: 'include'
+      });
+      const data = await resp.json();
+      resDiv.textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function login() {
+      const phone_number = document.getElementById('login_phone').value.trim();
+      const code = document.getElementById('login_code').value.trim();
+      const resDiv = document.getElementById('result_login');
+      resDiv.textContent = 'Запрос...';
+
+      const csrftoken = getCookie('csrftoken');
+
+      const resp = await fetch(BASE_URL + '/api/v1/auth/login/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({phone_number, code}),
+        credentials: 'include'
+      });
+      const data = await resp.json();
+      resDiv.textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function getProfile() {
+      const resDiv = document.getElementById('result_profile');
+      resDiv.textContent = 'Запрос...';
+
+      const resp = await fetch(BASE_URL + '/api/v1/profile/', {
+        method: 'GET',
+        credentials: 'include'
+      });
+      const data = await resp.json();
+      resDiv.textContent = JSON.stringify(data, null, 2);
+
+      // если пригласившие тоже нужны списком:
+      // if (data.invited_users && Array.isArray(data.invited_users)) {
+      //   resDiv.textContent += "\nПриглашённые:\n" + data.invited_users.map(u => u.phone_number).join('\n');
+      // }
+    }
+
+    async function enterInviteCode() {
+      const code = document.getElementById('invite_code').value.trim();
+      const resDiv = document.getElementById('result_enter_code');
+      resDiv.textContent = 'Запрос...';
+
+      const csrftoken = getCookie('csrftoken');
+
+      const resp = await fetch(BASE_URL + '/api/v1/enter_code/', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({code}),
+        credentials: 'include'
+      });
+      const data = await resp.json();
+      resDiv.textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function logout() {
+      const resDiv = document.getElementById('result_logout');
+      resDiv.textContent = 'Запрос...';
+
+      const csrftoken = getCookie('csrftoken');
+
+      const resp = await fetch(BASE_URL + '/api/v1/auth/logout/', {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrftoken
+        },
+        credentials: 'include'
+      });
+      const data = await resp.json();
+      resDiv.textContent = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>
