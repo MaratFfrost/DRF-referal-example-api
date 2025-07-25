@@ -15,4 +15,4 @@ redis==6.2.0
 sqlparse==0.5.3
 tzdata==2025.2
 uritemplate==4.2.0
-serverless-http==3.2.0
+serverless-wsgi==3.0.0 
