@@ -44,5 +44,5 @@ api доступно по адресу localhost:7777
 
 ## 📦 Postman коллекция
 
-https://nurmagomed.postman.co/workspace/mvvibro~98c2565e-d128-4b86-8667-86f023743248/collection/43720184-62503374-fdc8-418b-847e-619eb8012ee3?action=share&source=copy-link&creator=43720184
+https://nurmagomed.postman.co/workspace/98c2565e-d128-4b86-8667-86f023743248/collection/43720184-9e462ef1-86f2-4edf-9729-866e62074e61?action=share&source=copy-link&creator=43720184
 
