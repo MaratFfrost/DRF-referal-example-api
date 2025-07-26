@@ -44,5 +44,5 @@ api доступно по адресу localhost:7777
 
 ## 📦 Postman коллекция
 
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/your-collection-id)
+[![Run in Postman](https://run.pstmn.io/button.svg)]([https://app.getpostman.com/run-collection/your-collection-id](https://nurmagomed.postman.co/workspace/mvvibro~98c2565e-d128-4b86-8667-86f023743248/collection/43720184-62503374-fdc8-418b-847e-619eb8012ee3?action=share&source=copy-link&creator=43720184))
 
