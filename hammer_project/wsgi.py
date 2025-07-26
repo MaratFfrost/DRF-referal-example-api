@@ -7,12 +7,11 @@ For more information on this file, see
 https://docs.djangoproject.com/en/5.2/howto/deployment/wsgi/
 """
 
+
 import os
+
 from django.core.wsgi import get_wsgi_application
-from serverless_wsgi import handle_request
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "hammer_project.settings")
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'hammer_project.settings')
+
 application = get_wsgi_application()
-
-def handler(event, context):
-    return handle_request(application, event, context)
